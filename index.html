@@ -1,347 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0"
     >
 
-    <meta name="theme-color" content="#0b0f14">
+    <meta
+        name="theme-color"
+        content="#080b10"
+    >
 
     <title>UniversalEngine</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         :root {
-            --bg: #080b0f;
+
+            --bg: #080b10;
             --panel: #111820;
             --panel2: #18212b;
             --border: #263442;
+
             --text: #f5f7fa;
             --muted: #9aa8b5;
+
             --green: #00ff88;
-            --green2: #00c96b;
             --red: #ff4d5a;
             --yellow: #ffc857;
             --blue: #4da3ff;
         }
 
-        html {
+        html,
+        body {
+            margin: 0;
+            padding: 0;
             min-height: 100%;
-            background: var(--bg);
         }
 
         body {
-            margin: 0;
-            min-height: 100vh;
 
             font-family:
                 Arial,
                 Helvetica,
                 sans-serif;
 
-            background:
-                radial-gradient(
-                    circle at top,
-                    #122018 0%,
-                    var(--bg) 45%
-                );
+            background: var(--bg);
 
             color: var(--text);
-        }
 
-        .app {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
             padding: 20px;
         }
 
-        /* Header */
+        .container {
 
-        .header {
-            padding: 10px 0 20px;
+            width: 100%;
+            max-width: 900px;
+
+            margin: 0 auto;
         }
 
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+        header {
 
-            font-size: 30px;
-            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+
+            margin: 0;
 
             color: var(--green);
 
-            text-shadow:
-                0 0 15px rgba(0, 255, 136, 0.35);
+            font-size: 32px;
         }
 
         .subtitle {
-            margin-top: 8px;
+
             color: var(--muted);
+
+            margin-top: 8px;
+
             font-size: 15px;
         }
 
-        /* Cards */
+        .panel {
 
-        .card {
-            margin-top: 16px;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(24, 33, 43, 0.96),
-                    rgba(17, 24, 32, 0.96)
-                );
+            background: var(--panel);
 
             border: 1px solid var(--border);
+
             border-radius: 16px;
 
             padding: 18px;
 
-            box-shadow:
-                0 10px 35px rgba(0, 0, 0, 0.25);
+            margin-top: 15px;
         }
 
-        .card-title {
-            margin: 0 0 14px;
+        .panel-title {
 
             font-size: 18px;
-            font-weight: 700;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
         }
-
-        /* Status */
-
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            padding: 14px;
-
-            border-radius: 12px;
-
-            background: #0a0e12;
-            border: 1px solid var(--border);
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-
-            border-radius: 50%;
-
-            background: var(--yellow);
-
-            box-shadow:
-                0 0 12px rgba(255, 200, 87, 0.6);
-        }
-
-        .status-dot.ok {
-            background: var(--green);
-
-            box-shadow:
-                0 0 12px rgba(0, 255, 136, 0.7);
-        }
-
-        .status-dot.error {
-            background: var(--red);
-
-            box-shadow:
-                0 0 12px rgba(255, 77, 90, 0.7);
-        }
-
-        .status-text {
-            font-weight: 700;
-        }
-
-        /* Buttons */
 
         .buttons {
-            display: grid;
 
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+            display: flex;
+
+            flex-wrap: wrap;
 
             gap: 10px;
         }
 
         button {
-            min-height: 52px;
 
-            padding: 12px 14px;
+            appearance: none;
 
             border: 1px solid var(--border);
-            border-radius: 12px;
 
             background: var(--panel2);
+
             color: var(--text);
 
-            font-size: 15px;
-            font-weight: 700;
+            padding: 12px 16px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
 
             cursor: pointer;
 
             transition:
                 transform 0.15s ease,
-                background 0.15s ease,
-                border-color 0.15s ease;
+                background 0.15s ease;
         }
 
         button:hover {
-            background: #202d39;
-            border-color: #3b5063;
+
+            background: #22303d;
         }
 
         button:active {
+
             transform: scale(0.97);
         }
 
-        button.primary {
-            background: #073d29;
-            border-color: #087d4d;
-            color: var(--green);
+        .primary {
+
+            background: var(--green);
+
+            color: #00150b;
+
+            border-color: var(--green);
+
+            font-weight: bold;
         }
 
-        button.danger {
-            background: #3d1117;
-            border-color: #7d202b;
-            color: #ff8790;
+        .danger {
+
+            background: #32171b;
+
+            border-color: #6d2930;
         }
 
-        button.blue {
-            background: #0d2940;
-            border-color: #1d5b88;
-            color: #73bcff;
-        }
+        .status {
 
-        /* Information grid */
-
-        .info-grid {
             display: grid;
 
             grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+                repeat(
+                    auto-fit,
+                    minmax(130px, 1fr)
+                );
 
             gap: 10px;
         }
 
-        .info {
-            padding: 14px;
+        .stat {
 
-            background: #0b1015;
+            background: var(--panel2);
 
-            border:
-                1px solid var(--border);
+            border: 1px solid var(--border);
 
             border-radius: 12px;
+
+            padding: 14px;
         }
 
-        .info-label {
+        .stat-label {
+
             color: var(--muted);
+
             font-size: 12px;
+
             margin-bottom: 6px;
         }
 
-        .info-value {
+        .stat-value {
+
             font-size: 18px;
-            font-weight: 800;
+
+            font-weight: bold;
         }
 
-        /* Output */
+        .online {
+
+            color: var(--green);
+        }
+
+        .offline {
+
+            color: var(--red);
+        }
 
         #output {
-            min-height: 180px;
+
+            background: #000;
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
 
             padding: 15px;
+
+            min-height: 150px;
 
             overflow-x: auto;
 
             white-space: pre-wrap;
+
             word-break: break-word;
 
-            background: #050709;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 12px;
-
-            color: #dce6ee;
-
             font-family:
-                "Courier New",
                 monospace;
 
             font-size: 13px;
 
-            line-height: 1.55;
+            line-height: 1.5;
         }
 
-        .success {
-            color: var(--green);
-        }
+        .log {
 
-        .error {
-            color: #ff7b84;
-        }
+            margin-top: 10px;
 
-        /* Footer */
+            padding: 10px 12px;
 
-        .footer {
-            padding: 22px 0 10px;
+            border-radius: 8px;
 
-            text-align: center;
+            background: #0d1319;
 
-            color: #667481;
+            color: var(--muted);
+
+            font-family: monospace;
 
             font-size: 12px;
         }
 
-        /* Mobile */
+        footer {
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            padding: 25px 0;
+        }
 
         @media (max-width: 600px) {
 
-            .app {
+            body {
                 padding: 14px;
             }
 
-            .logo {
-                font-size: 26px;
+            h1 {
+                font-size: 27px;
             }
 
-            .buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .card {
-                padding: 14px;
+            button {
+                width: 100%;
             }
         }
+
     </style>
+
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-    <!-- Header -->
+    <header>
 
-    <header class="header">
-
-        <div class="logo">
-            ⚡ UniversalEngine
-        </div>
+        <h1>UniversalEngine</h1>
 
         <div class="subtitle">
             Personal Universal App Development Engine
@@ -350,72 +311,40 @@
     </header>
 
 
-    <!-- Engine Status -->
+    <!-- ENGINE CONTROLS -->
 
-    <section class="card">
+    <section class="panel">
 
-        <h2 class="card-title">
-            Engine Status
-        </h2>
-
-        <div class="status">
-
-            <span
-                id="statusDot"
-                class="status-dot"
-            ></span>
-
-            <span
-                id="statusText"
-                class="status-text"
-            >
-                Checking engine...
-            </span>
-
-        </div>
-
-    </section>
-
-
-    <!-- Controls -->
-
-    <section class="card">
-
-        <h2 class="card-title">
+        <div class="panel-title">
             Engine Controls
-        </h2>
+        </div>
 
         <div class="buttons">
 
             <button
-                class="blue"
-                type="button"
                 onclick="checkEngine()"
             >
-                🔍 Check Engine
+                Check Engine
             </button>
 
             <button
                 class="primary"
-                type="button"
                 onclick="startEngine()"
             >
-                ▶ Start Engine
+                Start Engine
             </button>
 
             <button
                 class="danger"
-                type="button"
                 onclick="stopEngine()"
             >
-                ■ Stop Engine
+                Stop Engine
             </button>
 
             <button
-                type="button"
-                onclick="addTestEntity()"
+                onclick="resetEngine()"
             >
-                ＋ Add Entity
+                Reset
             </button>
 
         </div>
@@ -423,75 +352,102 @@
     </section>
 
 
-    <!-- Engine Information -->
+    <!-- ENTITY CONTROLS -->
 
-    <section class="card">
+    <section class="panel">
 
-        <h2 class="card-title">
-            Engine Information
-        </h2>
+        <div class="panel-title">
+            Entity System
+        </div>
 
-        <div class="info-grid">
+        <div class="buttons">
 
-            <div class="info">
+            <button
+                onclick="addTestEntity()"
+            >
+                Add Test Entity
+            </button>
 
-                <div class="info-label">
-                    Engine
+            <button
+                onclick="clearEntities()"
+            >
+                Clear Entities
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATUS -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            Live Status
+        </div>
+
+        <div class="status">
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    ENGINE
                 </div>
 
                 <div
-                    id="engineName"
-                    class="info-value"
+                    id="engineState"
+                    class="stat-value offline"
                 >
-                    —
+                    OFFLINE
                 </div>
 
             </div>
 
 
-            <div class="info">
+            <div class="stat">
 
-                <div class="info-label">
-                    Version
+                <div class="stat-label">
+                    VERSION
                 </div>
 
                 <div
-                    id="engineVersion"
-                    class="info-value"
+                    id="version"
+                    class="stat-value"
                 >
-                    —
+                    -
                 </div>
 
             </div>
 
 
-            <div class="info">
+            <div class="stat">
 
-                <div class="info-label">
-                    Running
+                <div class="stat-label">
+                    ENTITIES
                 </div>
 
                 <div
-                    id="engineRunning"
-                    class="info-value"
+                    id="entities"
+                    class="stat-value"
                 >
-                    —
+                    0
                 </div>
 
             </div>
 
 
-            <div class="info">
+            <div class="stat">
 
-                <div class="info-label">
-                    Entities
+                <div class="stat-label">
+                    FRAMES
                 </div>
 
                 <div
-                    id="entityCount"
-                    class="info-value"
+                    id="frames"
+                    class="stat-value"
                 >
-                    —
+                    0
                 </div>
 
             </div>
@@ -501,39 +457,49 @@
     </section>
 
 
-    <!-- Console -->
+    <!-- OUTPUT -->
 
-    <section class="card">
+    <section class="panel">
 
-        <h2 class="card-title">
-            Engine Console
-        </h2>
+        <div class="panel-title">
+            Engine Output
+        </div>
 
         <div id="output">
-            Initializing UniversalEngine...
+            Initializing...
+        </div>
+
+        <div
+            id="log"
+            class="log"
+        >
+            Waiting for engine...
         </div>
 
     </section>
 
 
-    <footer class="footer">
-        UniversalEngine Test Console
+    <footer>
+
+        UniversalEngine v1.0.0
+
     </footer>
 
 </div>
 
 
 <!--
-    UniversalEngine Core
-
-    Version query parameters prevent old cached
-    JavaScript files from being reused by the browser.
+    IMPORTANT:
+    Load files in this exact order.
 -->
 
-<script src="./core/EngineConfig.js?v=20260814-2"></script>
-<script src="./core/EventBus.js?v=20260814-2"></script>
-<script src="./core/MasterEngine.js?v=20260814-2"></script>
-<script src="./core/index.js?v=20260814-2"></script>
+<script src="./core/EngineConfig.js"></script>
+
+<script src="./core/EventBus.js"></script>
+
+<script src="./core/MasterEngine.js"></script>
+
+<script src="./core/index.js"></script>
 
 
 <script>
@@ -541,570 +507,338 @@
 "use strict";
 
 
-/* =========================================================
-   UniversalEngine Test Console
-   ========================================================= */
-
 const output =
     document.getElementById("output");
 
-const statusDot =
-    document.getElementById("statusDot");
+const log =
+    document.getElementById("log");
 
-const statusText =
-    document.getElementById("statusText");
+const engineState =
+    document.getElementById("engineState");
 
-const engineName =
-    document.getElementById("engineName");
+const version =
+    document.getElementById("version");
 
-const engineVersion =
-    document.getElementById("engineVersion");
+const entities =
+    document.getElementById("entities");
 
-const engineRunning =
-    document.getElementById("engineRunning");
-
-const entityCount =
-    document.getElementById("entityCount");
+const frames =
+    document.getElementById("frames");
 
 
-/* =========================================================
-   Utility
-   ========================================================= */
+/* --------------------------------
+   OUTPUT
+-------------------------------- */
 
-function writeOutput(data, type = "normal") {
+function show(data) {
 
     if (typeof data === "string") {
 
         output.textContent = data;
 
-    } else {
-
-        try {
-
-            output.textContent =
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                );
-
-        } catch (error) {
-
-            output.textContent =
-                String(data);
-
-        }
-
-    }
-
-    output.className = "";
-
-    if (type === "success") {
-        output.classList.add("success");
-    }
-
-    if (type === "error") {
-        output.classList.add("error");
-    }
-}
-
-
-function setStatus(
-    text,
-    type = "loading"
-) {
-
-    statusText.textContent = text;
-
-    statusDot.className =
-        "status-dot";
-
-    if (type === "ok") {
-
-        statusDot.classList.add("ok");
-
-    }
-
-    if (type === "error") {
-
-        statusDot.classList.add("error");
-
-    }
-}
-
-
-/* =========================================================
-   Engine API Detection
-   ========================================================= */
-
-function getEngineAPI() {
-
-    if (
-        window.UniversalEngineAPI &&
-        typeof window.UniversalEngineAPI === "object"
-    ) {
-
-        return window.UniversalEngineAPI;
-
-    }
-
-    return null;
-}
-
-
-function getEngineObject() {
-
-    if (
-        window.UniversalEngine &&
-        typeof window.UniversalEngine === "object"
-    ) {
-
-        return window.UniversalEngine;
-
-    }
-
-    return null;
-}
-
-
-/* =========================================================
-   Safe Status
-   ========================================================= */
-
-function readEngineStatus() {
-
-    const api =
-        getEngineAPI();
-
-    const engine =
-        getEngineObject();
-
-
-    /*
-       Prefer the public API.
-    */
-
-    if (
-        api &&
-        typeof api.getStatus === "function"
-    ) {
-
-        return api.getStatus();
-
-    }
-
-
-    /*
-       Fallback:
-       Some versions may expose getStatus()
-       directly on UniversalEngine.
-    */
-
-    if (
-        engine &&
-        typeof engine.getStatus === "function"
-    ) {
-
-        return engine.getStatus();
-
-    }
-
-
-    /*
-       Final fallback:
-       Build a status object from available
-       public properties.
-    */
-
-    if (engine) {
-
-        return {
-
-            name:
-                engine.name ||
-                "UniversalEngine",
-
-            version:
-                engine.version ||
-                "unknown",
-
-            running:
-                Boolean(engine.running),
-
-            entities:
-                Array.isArray(engine.entities)
-                    ? engine.entities.length
-                    : 0,
-
-            tasks:
-                Array.isArray(engine.tasks)
-                    ? engine.tasks.length
-                    : 0,
-
-            projects:
-                Array.isArray(engine.projects)
-                    ? engine.projects.length
-                    : 0
-
-        };
-
-    }
-
-
-    throw new Error(
-        "UniversalEngine is not available."
-    );
-}
-
-
-/* =========================================================
-   Update Information UI
-   ========================================================= */
-
-function updateInformation(status) {
-
-    if (!status) {
         return;
     }
 
-
-    engineName.textContent =
-        status.name ||
-        status.engine ||
-        "UniversalEngine";
-
-
-    engineVersion.textContent =
-        status.version ||
-        "—";
+    output.textContent =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+}
 
 
-    engineRunning.textContent =
-        status.running === true
-            ? "YES"
-            : "NO";
+/* --------------------------------
+   LOG
+-------------------------------- */
 
+function writeLog(message) {
+
+    const time =
+        new Date()
+            .toLocaleTimeString();
+
+    log.textContent =
+        "[" +
+        time +
+        "] " +
+        message;
+}
+
+
+/* --------------------------------
+   GET API
+-------------------------------- */
+
+function getAPI() {
 
     if (
-        typeof status.entities === "number"
+        !window.UniversalEngineAPI
     ) {
 
-        entityCount.textContent =
-            String(status.entities);
+        throw new Error(
+            "UniversalEngineAPI is not loaded"
+        );
+    }
 
-    } else {
+    return window.UniversalEngineAPI;
+}
 
-        entityCount.textContent =
-            "—";
 
+/* --------------------------------
+   UPDATE UI
+-------------------------------- */
+
+function updateStatus() {
+
+    try {
+
+        const api =
+            getAPI();
+
+        const status =
+            api.getStatus();
+
+        engineState.textContent =
+            status.running
+                ? "RUNNING"
+                : "STOPPED";
+
+        engineState.className =
+            status.running
+                ? "stat-value online"
+                : "stat-value offline";
+
+        version.textContent =
+            status.version;
+
+        entities.textContent =
+            status.entities;
+
+        frames.textContent =
+            status.frameCount;
+
+        return status;
+
+    } catch (error) {
+
+        engineState.textContent =
+            "ERROR";
+
+        engineState.className =
+            "stat-value offline";
+
+        return null;
     }
 }
 
 
-/* =========================================================
-   Check Engine
-   ========================================================= */
+/* --------------------------------
+   CHECK ENGINE
+-------------------------------- */
 
 function checkEngine() {
 
     try {
 
-        const engine =
-            getEngineObject();
-
         const api =
-            getEngineAPI();
-
-
-        if (!engine) {
-
-            setStatus(
-                "UniversalEngine not loaded",
-                "error"
-            );
-
-            writeOutput(
-                "❌ UniversalEngine NOT loaded.\n\n" +
-                "Check the core JavaScript files.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        if (!api) {
-
-            setStatus(
-                "Engine loaded, API missing",
-                "error"
-            );
-
-            writeOutput(
-                "⚠️ UniversalEngine loaded,\n" +
-                "but UniversalEngineAPI is missing.",
-                "error"
-            );
-
-            return;
-
-        }
-
+            getAPI();
 
         const status =
-            readEngineStatus();
+            api.getStatus();
 
+        show({
 
-        updateInformation(status);
+            success: true,
 
+            message:
+                "UniversalEngine is loaded.",
 
-        setStatus(
-            "UniversalEngine loaded successfully",
-            "ok"
+            api:
+                "UniversalEngineAPI",
+
+            status:
+                status
+
+        });
+
+        writeLog(
+            "Engine check successful."
         );
 
+        updateStatus();
 
-        writeOutput(
-            {
-                status:
-                    "ENGINE LOADED",
+    } catch (error) {
 
-                engine:
-                    status,
-
-                api:
-                    "UniversalEngineAPI available",
-
-                timestamp:
-                    new Date().toISOString()
-            },
-            "success"
-        );
-
-    }
-
-    catch (error) {
-
-        setStatus(
-            "Engine error",
-            "error"
-        );
-
-        writeOutput(
+        show(
             "❌ ENGINE ERROR\n\n" +
             error.name +
             ": " +
-            error.message,
-            "error"
+            error.message
         );
 
+        writeLog(
+            "Engine check failed."
+        );
     }
-
 }
 
 
-/* =========================================================
-   Start Engine
-   ========================================================= */
+/* --------------------------------
+   START ENGINE
+-------------------------------- */
 
 function startEngine() {
 
     try {
 
         const api =
-            getEngineAPI();
-
-
-        if (!api) {
-
-            throw new Error(
-                "UniversalEngineAPI is not available."
-            );
-
-        }
-
-
-        if (
-            typeof api.start !== "function"
-        ) {
-
-            throw new Error(
-                "UniversalEngineAPI.start() is not available."
-            );
-
-        }
-
+            getAPI();
 
         const result =
             api.start();
 
-
         const status =
-            readEngineStatus();
+            api.getStatus();
 
+        show({
 
-        updateInformation(status);
+            action:
+                "START",
 
+            result:
+                result,
 
-        setStatus(
-            "Engine started",
-            "ok"
+            status:
+                status
+
+        });
+
+        writeLog(
+            result
+                ? "Engine started."
+                : "Engine was already running."
         );
 
+        updateStatus();
 
-        writeOutput(
-            {
-                action:
-                    "START",
+    } catch (error) {
 
-                result:
-                    result,
-
-                status:
-                    status
-            },
-            "success"
-        );
-
-    }
-
-    catch (error) {
-
-        setStatus(
-            "Start failed",
-            "error"
-        );
-
-        writeOutput(
+        show(
             "❌ START ERROR\n\n" +
             error.name +
             ": " +
-            error.message,
-            "error"
+            error.message
         );
-
     }
-
 }
 
 
-/* =========================================================
-   Stop Engine
-   ========================================================= */
+/* --------------------------------
+   STOP ENGINE
+-------------------------------- */
 
 function stopEngine() {
 
     try {
 
         const api =
-            getEngineAPI();
-
-
-        if (!api) {
-
-            throw new Error(
-                "UniversalEngineAPI is not available."
-            );
-
-        }
-
-
-        if (
-            typeof api.stop !== "function"
-        ) {
-
-            throw new Error(
-                "UniversalEngineAPI.stop() is not available."
-            );
-
-        }
-
+            getAPI();
 
         const result =
             api.stop();
 
-
         const status =
-            readEngineStatus();
+            api.getStatus();
 
+        show({
 
-        updateInformation(status);
+            action:
+                "STOP",
 
+            result:
+                result,
 
-        setStatus(
-            "Engine stopped",
-            "ok"
+            status:
+                status
+
+        });
+
+        writeLog(
+            result
+                ? "Engine stopped."
+                : "Engine was already stopped."
         );
 
+        updateStatus();
 
-        writeOutput(
-            {
-                action:
-                    "STOP",
+    } catch (error) {
 
-                result:
-                    result,
-
-                status:
-                    status
-            },
-            "success"
-        );
-
-    }
-
-    catch (error) {
-
-        setStatus(
-            "Stop failed",
-            "error"
-        );
-
-        writeOutput(
+        show(
             "❌ STOP ERROR\n\n" +
             error.name +
             ": " +
-            error.message,
-            "error"
+            error.message
         );
-
     }
-
 }
 
 
-/* =========================================================
-   Add Test Entity
-   ========================================================= */
+/* --------------------------------
+   RESET
+-------------------------------- */
+
+function resetEngine() {
+
+    try {
+
+        const api =
+            getAPI();
+
+        const result =
+            api.reset();
+
+        show({
+
+            action:
+                "RESET",
+
+            result:
+                result,
+
+            status:
+                api.getStatus()
+
+        });
+
+        writeLog(
+            "Engine reset completed."
+        );
+
+        updateStatus();
+
+    } catch (error) {
+
+        show(
+            "❌ RESET ERROR\n\n" +
+            error.name +
+            ": " +
+            error.message
+        );
+    }
+}
+
+
+/* --------------------------------
+   ADD TEST ENTITY
+-------------------------------- */
 
 function addTestEntity() {
 
     try {
 
         const api =
-            getEngineAPI();
-
-
-        if (!api) {
-
-            throw new Error(
-                "UniversalEngineAPI is not available."
-            );
-
-        }
-
-
-        if (
-            typeof api.addEntity !== "function"
-        ) {
-
-            throw new Error(
-                "UniversalEngineAPI.addEntity() is not available."
-            );
-
-        }
-
+            getAPI();
 
         const entity = {
 
@@ -1114,93 +848,207 @@ function addTestEntity() {
             enabled:
                 true,
 
-            update:
-                function(deltaTime) {
+            updates:
+                0,
 
-                    /*
-                       Test entity update.
-                       Future game/app logic can
-                       be placed here.
-                    */
+            update(deltaTime) {
 
-                }
+                this.updates++;
+
+            }
 
         };
 
-
         const result =
-            api.addEntity(entity);
+            api.addEntity(
+                entity
+            );
 
+        show({
 
-        const status =
-            readEngineStatus();
+            action:
+                "ADD ENTITY",
 
+            entity:
+                {
+                    name:
+                        result.name,
 
-        updateInformation(status);
+                    enabled:
+                        result.enabled
+                },
 
+            status:
+                api.getStatus()
 
-        setStatus(
-            "Entity added successfully",
-            "ok"
+        });
+
+        writeLog(
+            "TestEntity added."
         );
 
+        updateStatus();
 
-        writeOutput(
-            {
-                action:
-                    "ADD ENTITY",
+    } catch (error) {
 
-                entity:
-                    entity.name,
-
-                result:
-                    result,
-
-                status:
-                    status
-            },
-            "success"
-        );
-
-    }
-
-    catch (error) {
-
-        setStatus(
-            "Entity operation failed",
-            "error"
-        );
-
-        writeOutput(
+        show(
             "❌ ENTITY ERROR\n\n" +
             error.name +
             ": " +
-            error.message,
-            "error"
+            error.message
         );
-
     }
-
 }
 
 
-/* =========================================================
-   Automatic Engine Check
-   ========================================================= */
+/* --------------------------------
+   CLEAR ENTITIES
+-------------------------------- */
+
+function clearEntities() {
+
+    try {
+
+        const api =
+            getAPI();
+
+        const result =
+            api.clearEntities();
+
+        show({
+
+            action:
+                "CLEAR ENTITIES",
+
+            result:
+                result,
+
+            status:
+                api.getStatus()
+
+        });
+
+        writeLog(
+            "All entities cleared."
+        );
+
+        updateStatus();
+
+    } catch (error) {
+
+        show(
+            "❌ ENTITY ERROR\n\n" +
+            error.name +
+            ": " +
+            error.message
+        );
+    }
+}
+
+
+/* --------------------------------
+   ENGINE EVENTS
+-------------------------------- */
 
 window.addEventListener(
     "load",
-    function() {
+    function () {
 
-        /*
-           Small delay allows all external
-           JavaScript files to finish loading.
-        */
+        try {
 
-        setTimeout(
-            checkEngine,
-            100
-        );
+            if (
+                !window.UniversalEngine
+            ) {
+
+                throw new Error(
+                    "UniversalEngine failed to load."
+                );
+            }
+
+            if (
+                !window.UniversalEngineAPI
+            ) {
+
+                throw new Error(
+                    "UniversalEngineAPI failed to load."
+                );
+            }
+
+            updateStatus();
+
+            show({
+                success:
+                    true,
+
+                message:
+                    "UniversalEngine ready.",
+
+                status:
+                    window
+                        .UniversalEngineAPI
+                        .getStatus()
+            });
+
+            writeLog(
+                "UniversalEngine ready."
+            );
+
+        } catch (error) {
+
+            show(
+                "❌ LOAD ERROR\n\n" +
+                error.name +
+                ": " +
+                error.message
+            );
+
+            writeLog(
+                "Engine failed to initialize."
+            );
+        }
+
+    }
+);
+
+
+/* --------------------------------
+   LIVE STATUS
+-------------------------------- */
+
+setInterval(
+    function () {
+
+        updateStatus();
+
+    },
+    500
+);
+
+
+/* --------------------------------
+   ENGINE UPDATE EVENT
+-------------------------------- */
+
+window.addEventListener(
+    "load",
+    function () {
+
+        if (
+            window.UniversalEngineAPI
+        ) {
+
+            window
+                .UniversalEngineAPI
+                .on(
+                    "engine:update",
+                    function () {
+
+                        updateStatus();
+
+                    }
+                );
+
+        }
 
     }
 );
@@ -1208,4 +1056,5 @@ window.addEventListener(
 </script>
 
 </body>
+
 </html>
