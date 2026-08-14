@@ -1,71 +1,155 @@
 (function (window) {
     "use strict";
 
-    // Ensure the main UniversalEngine instance exists
-    if (!window.UniversalEngine) {
-        if (typeof window.MasterEngine !== "function") {
-            throw new Error(
-                "MasterEngine is not loaded. Load MasterEngine.js first."
-            );
-        }
+    /*
+     * Make sure MasterEngine exists
+     */
 
-        window.UniversalEngine = new window.MasterEngine(
-            window.EngineConfig || {}
+    if (!window.UniversalEngine) {
+
+        console.error(
+            "[UniversalEngine] MasterEngine was not loaded."
         );
+
+        return;
     }
 
-    // Public API
-    window.UniversalEngineAPI = {
+    const engine =
+        window.UniversalEngine;
 
-        version: "1.0.0",
+    /*
+     * Initialize engine
+     */
 
-        getEngine: function () {
-            return window.UniversalEngine;
+    engine.init();
+
+    /*
+     * Public API
+     */
+
+    const API = {
+
+        /* Engine */
+
+        init() {
+            return engine.init();
         },
 
-        getStatus: function () {
-            return window.UniversalEngine.getStatus();
+        start() {
+            return engine.start();
         },
 
-        start: function () {
-            return window.UniversalEngine.start();
+        stop() {
+            return engine.stop();
         },
 
-        stop: function () {
-            return window.UniversalEngine.stop();
+        reset() {
+            return engine.reset();
         },
 
-        reset: function () {
-            return window.UniversalEngine.reset();
+        destroy() {
+            return engine.destroy();
         },
 
-        addEntity: function (entity) {
-            return window.UniversalEngine.addEntity(entity);
+        /* Status */
+
+        getStatus() {
+            return engine.getStatus();
         },
 
-        removeEntity: function (entity) {
-            return window.UniversalEngine.removeEntity(entity);
+        /* Entities */
+
+        addEntity(entity) {
+            return engine.addEntity(entity);
         },
 
-        addTask: function (task) {
-            return window.UniversalEngine.addTask(task);
+        removeEntity(entity) {
+            return engine.removeEntity(entity);
         },
 
-        removeTask: function (task) {
-            return window.UniversalEngine.removeTask(task);
+        clearEntities() {
+            return engine.clearEntities();
         },
 
-        addProject: function (project) {
-            return window.UniversalEngine.addProject(project);
+        /* Tasks */
+
+        addTask(task) {
+            return engine.addTask(task);
         },
 
-        removeProject: function (project) {
-            return window.UniversalEngine.removeProject(project);
+        removeTask(task) {
+            return engine.removeTask(task);
         },
 
-        clearAll: function () {
-            return window.UniversalEngine.clearAll();
+        /* Projects */
+
+        addProject(project) {
+            return engine.addProject(project);
+        },
+
+        /* Events */
+
+        on(eventName, listener) {
+            return engine.on(
+                eventName,
+                listener
+            );
+        },
+
+        off(eventName, listener) {
+            return engine.off(
+                eventName,
+                listener
+            );
+        },
+
+        emit(eventName, data) {
+            return engine.emit(
+                eventName,
+                data
+            );
+        },
+
+        /*
+         * Direct access to engine
+         * for advanced usage.
+         */
+
+        getEngine() {
+            return engine;
         }
     };
 
-})(typeof window !== "undefined" ? window : globalThis);
+    /*
+     * Public API
+     */
+
+    window.UniversalEngineAPI = API;
+
+    /*
+     * Compatibility:
+     * Both names work.
+     */
+
+    window.UniversalEngine.api = API;
+
+    /*
+     * Debug message
+     */
+
+    if (
+        window.EngineConfig &&
+        window.EngineConfig.debug
+    ) {
+
+        console.log(
+            "[UniversalEngine] Loaded successfully."
+        );
+
+        console.log(
+            "[UniversalEngine] Version:",
+            engine.version
+        );
+    }
+
+})(window);
