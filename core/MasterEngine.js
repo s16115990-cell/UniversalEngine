@@ -2,133 +2,276 @@
     "use strict";
 
     class MasterEngine {
+
         constructor(config) {
-            this.version = "1.0.0";
+
+            this.config = config || {};
+
+            this.name =
+                this.config.name ||
+                "UniversalEngine";
+
+            this.version =
+                this.config.version ||
+                "1.0.0";
+
             this.running = false;
 
-            this.config = config || window.EngineConfig || {};
+            this.initialized = false;
+
             this.entities = [];
+
             this.tasks = [];
+
             this.projects = [];
 
-            this.lastTime = 0;
-            this.deltaTime = 0;
             this.frameCount = 0;
-            this.startTime = 0;
+
+            this.deltaTime = 0;
+
+            this.elapsedTime = 0;
+
+            this.lastTime = 0;
+
+            this._animationFrame = null;
+
+            this.eventBus =
+                new window.EventBus();
+
+            this._boundLoop =
+                this._loop.bind(this);
         }
 
-        getStatus() {
-            return {
-                name: this.config.name || "UniversalEngine",
-                version: this.version,
-                running: this.running,
-                entities: this.entities.length,
-                tasks: this.tasks.length,
-                projects: this.projects.length,
-                frameCount: this.frameCount
-            };
+        /* --------------------------------
+           INITIALIZE
+        -------------------------------- */
+
+        init() {
+
+            if (this.initialized) {
+                return true;
+            }
+
+            this.initialized = true;
+
+            this.eventBus.emit(
+                "engine:init",
+                this.getStatus()
+            );
+
+            return true;
         }
+
+        /* --------------------------------
+           START
+        -------------------------------- */
 
         start() {
+
+            if (!this.initialized) {
+                this.init();
+            }
+
             if (this.running) {
                 return false;
             }
 
             this.running = true;
-            this.startTime = Date.now();
-            this.lastTime = performance.now();
 
-            this._loop();
+            this.lastTime =
+                performance.now();
+
+            this.eventBus.emit(
+                "engine:start",
+                this.getStatus()
+            );
+
+            this._animationFrame =
+                requestAnimationFrame(
+                    this._boundLoop
+                );
 
             return true;
         }
+
+        /* --------------------------------
+           STOP
+        -------------------------------- */
 
         stop() {
+
+            if (!this.running) {
+                return false;
+            }
+
             this.running = false;
+
+            if (this._animationFrame !== null) {
+
+                cancelAnimationFrame(
+                    this._animationFrame
+                );
+
+                this._animationFrame = null;
+            }
+
+            this.eventBus.emit(
+                "engine:stop",
+                this.getStatus()
+            );
+
             return true;
         }
 
-        _loop() {
+        /* --------------------------------
+           MAIN LOOP
+        -------------------------------- */
+
+        _loop(currentTime) {
+
             if (!this.running) {
                 return;
             }
 
-            const now = performance.now();
+            this.deltaTime =
+                (currentTime - this.lastTime) / 1000;
 
-            this.deltaTime = Math.min(
-                (now - this.lastTime) / 1000,
-                this.config.engine?.maxDeltaTime || 0.1
-            );
+            this.lastTime = currentTime;
 
-            this.lastTime = now;
+            this.elapsedTime +=
+                this.deltaTime;
+
             this.frameCount++;
 
-            this.update(this.deltaTime);
+            this._updateEntities(
+                this.deltaTime
+            );
 
-            const targetFPS =
-                this.config.engine?.targetFPS || 60;
+            this._runTasks(
+                this.deltaTime
+            );
 
-            const frameDelay = 1000 / targetFPS;
-
-            setTimeout(() => {
-                if (this.running) {
-                    this._loop();
+            this.eventBus.emit(
+                "engine:update",
+                {
+                    deltaTime: this.deltaTime,
+                    elapsedTime: this.elapsedTime,
+                    frameCount: this.frameCount
                 }
-            }, frameDelay);
+            );
+
+            this._animationFrame =
+                requestAnimationFrame(
+                    this._boundLoop
+                );
         }
 
-        update(deltaTime) {
-            this._updateTasks(deltaTime);
-            this._updateEntities(deltaTime);
-        }
-
-        _updateTasks(deltaTime) {
-            for (let i = 0; i < this.tasks.length; i++) {
-                const task = this.tasks[i];
-
-                if (!task || task.enabled === false) {
-                    continue;
-                }
-
-                if (typeof task.update === "function") {
-                    task.update(deltaTime);
-                }
-            }
-        }
+        /* --------------------------------
+           UPDATE ENTITIES
+        -------------------------------- */
 
         _updateEntities(deltaTime) {
-            for (let i = 0; i < this.entities.length; i++) {
-                const entity = this.entities[i];
 
-                if (!entity || entity.enabled === false) {
-                    continue;
+            const list =
+                this.entities.slice();
+
+            list.forEach(entity => {
+
+                if (!entity) {
+                    return;
                 }
 
-                if (typeof entity.update === "function") {
-                    entity.update(deltaTime);
+                if (entity.enabled === false) {
+                    return;
                 }
-            }
+
+                if (
+                    typeof entity.update !==
+                    "function"
+                ) {
+                    return;
+                }
+
+                try {
+
+                    entity.update(
+                        deltaTime
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "[UniversalEngine Entity Error]",
+                        error
+                    );
+
+                    this.eventBus.emit(
+                        "engine:error",
+                        error
+                    );
+                }
+
+            });
         }
 
+        /* --------------------------------
+           ADD ENTITY
+        -------------------------------- */
+
         addEntity(entity) {
+
             if (!entity) {
-                return null;
+                throw new Error(
+                    "Entity cannot be null or undefined"
+                );
             }
 
-            const maxEntities =
-                this.config.entities?.maxEntities || 10000;
+            if (
+                this.entities.length >=
+                (this.config.maxEntities || 10000)
+            ) {
+                throw new Error(
+                    "Maximum entity limit reached"
+                );
+            }
 
-            if (this.entities.length >= maxEntities) {
-                throw new Error("Maximum entity limit reached.");
+            if (
+                typeof entity !== "object"
+            ) {
+                throw new TypeError(
+                    "Entity must be an object"
+                );
+            }
+
+            if (
+                typeof entity.update !==
+                "function"
+            ) {
+                entity.update = function () {};
+            }
+
+            if (entity.enabled === undefined) {
+                entity.enabled = true;
             }
 
             this.entities.push(entity);
 
+            this.eventBus.emit(
+                "entity:add",
+                entity
+            );
+
             return entity;
         }
 
+        /* --------------------------------
+           REMOVE ENTITY
+        -------------------------------- */
+
         removeEntity(entity) {
-            const index = this.entities.indexOf(entity);
+
+            const index =
+                this.entities.indexOf(entity);
 
             if (index === -1) {
                 return false;
@@ -136,19 +279,39 @@
 
             this.entities.splice(index, 1);
 
+            this.eventBus.emit(
+                "entity:remove",
+                entity
+            );
+
             return true;
         }
 
+        /* --------------------------------
+           REMOVE ALL ENTITIES
+        -------------------------------- */
+
+        clearEntities() {
+
+            this.entities.length = 0;
+
+            this.eventBus.emit(
+                "entity:clear"
+            );
+
+            return true;
+        }
+
+        /* --------------------------------
+           TASKS
+        -------------------------------- */
+
         addTask(task) {
-            if (!task) {
-                return null;
-            }
 
-            const maxTasks =
-                this.config.tasks?.maxTasks || 1000;
-
-            if (this.tasks.length >= maxTasks) {
-                throw new Error("Maximum task limit reached.");
+            if (typeof task !== "function") {
+                throw new TypeError(
+                    "Task must be a function"
+                );
             }
 
             this.tasks.push(task);
@@ -157,7 +320,9 @@
         }
 
         removeTask(task) {
-            const index = this.tasks.indexOf(task);
+
+            const index =
+                this.tasks.indexOf(task);
 
             if (index === -1) {
                 return false;
@@ -168,16 +333,33 @@
             return true;
         }
 
+        _runTasks(deltaTime) {
+
+            this.tasks.slice().forEach(task => {
+
+                try {
+                    task(deltaTime);
+                } catch (error) {
+
+                    console.error(
+                        "[UniversalEngine Task Error]",
+                        error
+                    );
+                }
+
+            });
+        }
+
+        /* --------------------------------
+           PROJECTS
+        -------------------------------- */
+
         addProject(project) {
+
             if (!project) {
-                return null;
-            }
-
-            const maxProjects =
-                this.config.projects?.maxProjects || 100;
-
-            if (this.projects.length >= maxProjects) {
-                throw new Error("Maximum project limit reached.");
+                throw new Error(
+                    "Project cannot be empty"
+                );
             }
 
             this.projects.push(project);
@@ -185,48 +367,137 @@
             return project;
         }
 
-        removeProject(project) {
-            const index = this.projects.indexOf(project);
+        /* --------------------------------
+           EVENTS
+        -------------------------------- */
 
-            if (index === -1) {
-                return false;
-            }
+        on(eventName, listener) {
 
-            this.projects.splice(index, 1);
-
-            return true;
+            return this.eventBus.on(
+                eventName,
+                listener
+            );
         }
 
-        clearAll() {
-            this.entities.length = 0;
-            this.tasks.length = 0;
-            this.projects.length = 0;
+        off(eventName, listener) {
 
-            return true;
+            return this.eventBus.off(
+                eventName,
+                listener
+            );
         }
+
+        emit(eventName, data) {
+
+            return this.eventBus.emit(
+                eventName,
+                data
+            );
+        }
+
+        /* --------------------------------
+           STATUS
+        -------------------------------- */
+
+        getStatus() {
+
+            return {
+
+                name: this.name,
+
+                version: this.version,
+
+                initialized:
+                    this.initialized,
+
+                running:
+                    this.running,
+
+                entities:
+                    this.entities.length,
+
+                tasks:
+                    this.tasks.length,
+
+                projects:
+                    this.projects.length,
+
+                frameCount:
+                    this.frameCount,
+
+                deltaTime:
+                    Number(
+                        this.deltaTime.toFixed(4)
+                    ),
+
+                elapsedTime:
+                    Number(
+                        this.elapsedTime.toFixed(2)
+                    )
+            };
+        }
+
+        /* --------------------------------
+           RESET
+        -------------------------------- */
 
         reset() {
+
             this.stop();
 
-            this.entities.length = 0;
+            this.clearEntities();
+
             this.tasks.length = 0;
+
             this.projects.length = 0;
 
-            this.lastTime = 0;
-            this.deltaTime = 0;
             this.frameCount = 0;
-            this.startTime = 0;
+
+            this.deltaTime = 0;
+
+            this.elapsedTime = 0;
+
+            this.lastTime = 0;
+
+            this.initialized = false;
+
+            this.eventBus.emit(
+                "engine:reset"
+            );
+
+            return true;
+        }
+
+        /* --------------------------------
+           DESTROY
+        -------------------------------- */
+
+        destroy() {
+
+            this.stop();
+
+            this.clearEntities();
+
+            this.tasks.length = 0;
+
+            this.projects.length = 0;
+
+            this.eventBus.clear();
+
+            this.initialized = false;
 
             return true;
         }
     }
 
-    window.MasterEngine = MasterEngine;
+    /*
+     * IMPORTANT:
+     * Create ONE global engine instance.
+     */
 
-    if (!window.UniversalEngine) {
-        window.UniversalEngine = new MasterEngine(
-            window.EngineConfig || {}
+    window.UniversalEngine =
+        new MasterEngine(
+            window.EngineConfig
         );
-    }
 
-})(typeof window !== "undefined" ? window : globalThis);
+})(window);
