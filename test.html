@@ -1,1 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniversalEngine Test</title>
 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #00ff88;
+        }
+
+        .box {
+            background: #222;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 12px 18px;
+            margin: 5px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>UniversalEngine Test</h1>
+
+    <div class="box">
+        <button onclick="checkEngine()">Check Engine</button>
+        <button onclick="startEngine()">Start Engine</button>
+        <button onclick="stopEngine()">Stop Engine</button>
+        <button onclick="addTestEntity()">Add Entity</button>
+    </div>
+
+    <div id="output">Testing...</div>
+
+    <!-- UniversalEngine files -->
+    <script src="./core/EngineConfig.js"></script>
+    <script src="./core/EventBus.js"></script>
+    <script src="./core/MasterEngine.js"></script>
+    <script src="./core/index.js"></script>
+
+    <script>
+        const output = document.getElementById("output");
+
+        function show(data) {
+            output.textContent =
+                typeof data === "string"
+                    ? data
+                    : JSON.stringify(data, null, 2);
+        }
+
+        function checkEngine() {
+            try {
+                if (!window.UniversalEngine) {
+                    show("❌ UniversalEngine NOT loaded");
+                    return;
+                }
+
+                if (!window.UniversalEngineAPI) {
+                    show("❌ UniversalEngineAPI NOT loaded");
+                    return;
+                }
+
+                show({
+                    status: "✅ ENGINE LOADED",
+                    engine: window.UniversalEngineAPI.getStatus()
+                });
+
+            } catch (error) {
+                show(
+                    "❌ ERROR\n\n" +
+                    error.name + ": " +
+                    error.message
+                );
+            }
+        }
+
+        function startEngine() {
+            try {
+                const result = window.UniversalEngineAPI.start();
+
+                show({
+                    action: "START",
+                    result: result,
+                    status: window.UniversalEngineAPI.getStatus()
+                });
+
+            } catch (error) {
+                show(
+                    "❌ START ERROR\n\n" +
+                    error.name + ": " +
+                    error.message
+                );
+            }
+        }
+
+        function stopEngine() {
+            try {
+                const result = window.UniversalEngineAPI.stop();
+
+                show({
+                    action: "STOP",
+                    result: result,
+                    status: window.UniversalEngineAPI.getStatus()
+                });
+
+            } catch (error) {
+                show(
+                    "❌ STOP ERROR\n\n" +
+                    error.name + ": " +
+                    error.message
+                );
+            }
+        }
+
+        function addTestEntity() {
+            try {
+                const entity = {
+                    name: "TestEntity",
+                    enabled: true,
+
+                    update: function(deltaTime) {
+                        // Test entity update loop
+                    }
+                };
+
+                const result =
+                    window.UniversalEngineAPI.addEntity(entity);
+
+                show({
+                    action: "ADD ENTITY",
+                    result: result,
+                    status: window.UniversalEngineAPI.getStatus()
+                });
+
+            } catch (error) {
+                show(
+                    "❌ ENTITY ERROR\n\n" +
+                    error.name + ": " +
+                    error.message
+                );
+            }
+        }
+
+        // Automatic first check
+        window.addEventListener("load", function() {
+            checkEngine();
+        });
+    </script>
+
+</body>
+</html>
